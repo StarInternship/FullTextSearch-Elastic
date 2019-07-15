@@ -22,6 +22,7 @@ namespace PlasticSearch.Controllers
         private static readonly Stopwatch sw = new Stopwatch();
         private static long preprocessTime = -1;
         private static Thread preprocessThread;
+        private static Dictionary<string, string> files;
 
         public ActionResult Index()
         {
@@ -66,7 +67,7 @@ namespace PlasticSearch.Controllers
 
                 Importer importer = new Importer();
 
-                IDictionary<string, string> files = importer.ReadFiles();
+                files = importer.ReadFiles();
 
                 sw.Start();
 
@@ -94,6 +95,14 @@ namespace PlasticSearch.Controllers
             preprocessThread.Join();
 
             return preprocessTime;
+        }
+
+        [HttpPost]
+        public JsonResult GetFiles()
+        {
+            preprocessThread.Join();
+
+            return Json(new SearchResult(new HashSet<string>(files.Keys), 1543));
         }
     }
 }

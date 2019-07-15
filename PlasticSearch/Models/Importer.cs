@@ -8,7 +8,7 @@ namespace PlasticSearch.Models
 {
     class Importer
     {
-        private readonly string filesPath = @"../../../../test_files";
+        private readonly string filesPath = @"~/../../SimpleSearch/test_files";
 
         public Dictionary<string, string> ReadFiles()
         {
@@ -24,6 +24,7 @@ namespace PlasticSearch.Models
                 string text = File.ReadAllText(path);
                 filesDictionary[path] = text;
                 Console.WriteLine(path + " -> " + text);
+             
             }
         }
 
