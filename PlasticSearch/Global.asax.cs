@@ -17,7 +17,7 @@ namespace PlasticSearch
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            HomeController.Preprocess(); 
+            SearchController.Instance.Preprocess(); 
         }
     }
 }

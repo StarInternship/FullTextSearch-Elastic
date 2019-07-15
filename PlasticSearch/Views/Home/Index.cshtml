@@ -55,7 +55,7 @@
                 $('#result-list').html('');
                 $.each(list, (index, value) => {
                     found = true;
-                    $('#result-list').append('<li>' + value + '</li>')
+                    $('#result-list').append('<li class="list-group-item list-group-item-action">' + value + '</li>')
                 });
 
                 if (!found) {
