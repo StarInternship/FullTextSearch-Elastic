@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "Plastic Search";
+}
+
+<div class="jumbotron">
+    <h2>Search</h2>
+    <p class="lead">search in files here:</p>
+    <input type="text" placeholder="search" id="query" />
+    <button title="search" onclick="search()" id="search-btn">search</button>
+
+    <div>
+        <span id="state"></span>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+
+        $(document).ready(preprocess);
+
+        function preprocess() {
+            $('#search-btn').attr("disabled", true);
+            $('#state').html('preprocess');
+
+            $.ajax({
+                url: '/home/preprocess',
+                method: 'post'
+            }).done((duration) => {
+                $('#search-btn').attr("disabled", false);
+                $('#state').html('Preprocess duration: ' + duration);
+            });
+        }
+
+        function search() {
+            const query = $('#query').val();
+
+            $('#state').html('searching');
+
+            $.ajax({
+                url: '/home/search',
+                method: 'post',
+                data: query
+            }).done((result) => {
+                $('#result-div').html(result);
+            });
+        }
+    </script>
+}
