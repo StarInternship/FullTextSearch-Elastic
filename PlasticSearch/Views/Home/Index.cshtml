@@ -22,6 +22,12 @@
 @section scripts {
     <script>
 
+        document.getElementById("query").addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("search-btn").click();
+            }
+        });
         $(document).ready(() => {
             $('#search-btn').attr('disabled', true);
             $('#search-btn').html('Waiting');
@@ -40,6 +46,7 @@
         function search() {
             const query = $('#query').val();
 
+            $('#result-list').html('');
             $('#state').html('searching');
 
             $.ajax({
@@ -52,7 +59,6 @@
                 var list = result.result;
                 var found = false;
 
-                $('#result-list').html('');
                 $.each(list, (index, value) => {
                     found = true;
                     $('#result-list').append('<li class="list-group-item list-group-item-action">' + value + '</li>')
