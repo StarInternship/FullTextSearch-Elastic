@@ -3,15 +3,19 @@
 }
 
 <div class="jumbotron">
-    <h2>Search</h2>
     <p class="lead">Search in files here:</p>
-    <input type="text" placeholder="search" id="query" />
-    <button title="search" onclick="search()" id="search-btn">Search</button>
+
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="search" aria-label="search" aria-describedby="basic-addon2" id="query">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" id="search-btn" onclick="search()">Search</button>
+        </div>
+    </div>
 
     <div>
         <span id="state"></span>
 
-        <ol id="result-list"></ol>
+        <ol class="list-group" id="result-list"></ol>
     </div>
 </div>
 
@@ -41,7 +45,9 @@
             $.ajax({
                 url: '/home/search',
                 method: 'post',
-                data: query
+                data: {
+                    query: query
+                }
             }).done((result) => {
                 var list = result.result;
                 var found = false;
