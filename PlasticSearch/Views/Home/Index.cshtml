@@ -10,15 +10,15 @@
 
     <div>
         <span id="state"></span>
+
+        <ol id="result-list"></ol>
     </div>
 </div>
 
 @section scripts {
     <script>
 
-        $(document).ready(preprocess);
-
-        function preprocess() {
+        $(document).ready(() => {
             $('#search-btn').attr("disabled", true);
             $('#state').html('preprocess');
 
@@ -29,7 +29,7 @@
                 $('#search-btn').attr("disabled", false);
                 $('#state').html('Preprocess duration: ' + duration);
             });
-        }
+        });
 
         function search() {
             const query = $('#query').val();
@@ -41,7 +41,20 @@
                 method: 'post',
                 data: query
             }).done((result) => {
-                $('#result-div').html(result);
+                var list = result.result;
+                var found = false;
+
+                $('#result-list').html('');
+                $.each(list, (index, value) => {
+                    found = true;
+                    $('#result-list').append('<li>' + value + '</li>')
+                });
+
+                if (!found) {
+                    $('#state').html('search duration: ' + result.time + '. no result found.');
+                } else {
+                    $('#state').html('search duration: ' + result.time + '. results:');
+                }
             });
         }
     </script>
