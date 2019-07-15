@@ -7,11 +7,13 @@ namespace PlasticSearch.Models
 {
     public class SearchResult
     {
-        public ISet<string> Result { get; }
+        public ISet<string> result { get; }
+        public int time { get; }
 
-        public SearchResult(ISet<string> result)
+    public SearchResult(ISet<string> result, int time)
         {
-            Result = result;
+            this.result = result;
+            this.time = time;
         }
     }
 }
