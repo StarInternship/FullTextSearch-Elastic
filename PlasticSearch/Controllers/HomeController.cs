@@ -31,8 +31,32 @@ namespace PlasticSearch.Controllers
         [HttpPost]
         public JsonResult Search(string query)
         {
-            return Json(new SearchResult(new HashSet<string>(), 2000));
+            result = new HashSet<string>();
+
+            QueryProcess(query);
+            long searchTime = DoSearch();
+
+            return Json(new SearchResult(result, searchTime));
         }
+
+
+        static void QueryProcess(string query)
+        {
+            sw.Restart();
+
+            queryTokens = exactSearchTokenizer.TokenizeQuery(ngramSearchTokenizer.CleanText(query));
+
+        }
+
+        static long DoSearch()
+        {
+
+            search.search(queryTokens.ToList(), result);
+
+            sw.Stop();
+            return sw.ElapsedMilliseconds;
+        }
+
 
         public static void Preprocess()
         {
