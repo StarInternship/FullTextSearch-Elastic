@@ -4,9 +4,9 @@
 
 <div class="jumbotron">
     <h2>Search</h2>
-    <p class="lead">search in files here:</p>
+    <p class="lead">Search in files here:</p>
     <input type="text" placeholder="search" id="query" />
-    <button title="search" onclick="search()" id="search-btn">search</button>
+    <button title="search" onclick="search()" id="search-btn">Search</button>
 
     <div>
         <span id="state"></span>
@@ -19,15 +19,17 @@
     <script>
 
         $(document).ready(() => {
-            $('#search-btn').attr("disabled", true);
+            $('#search-btn').attr('disabled', true);
+            $('#search-btn').html('Waiting');
             $('#state').html('preprocess');
 
             $.ajax({
-                url: '/home/preprocess',
+                url: '/home/isReady',
                 method: 'post'
             }).done((duration) => {
                 $('#search-btn').attr("disabled", false);
-                $('#state').html('Preprocess duration: ' + duration);
+                $('#search-btn').html('Search');
+                $('#state').html('Preprocess duration: ' + duration + ' ms');
             });
         });
 
@@ -51,9 +53,9 @@
                 });
 
                 if (!found) {
-                    $('#state').html('search duration: ' + result.time + '. no result found.');
+                    $('#state').html('search duration: ' + result.time + ' ms. no result found.');
                 } else {
-                    $('#state').html('search duration: ' + result.time + '. results:');
+                    $('#state').html('search duration: ' + result.time + ' ms. results:');
                 }
             });
         }
