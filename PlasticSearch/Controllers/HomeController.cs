@@ -31,10 +31,9 @@ namespace PlasticSearch.Controllers
         [HttpPost]
         public JsonResult Search(string query)
         {
-            return Json(new SearchResult(new HashSet<string>()));
+            return Json(new SearchResult(new HashSet<string>(), 2000));
         }
 
-        [HttpPost]
         public static void Preprocess()
         {
             Importer importer = new Importer();
@@ -52,6 +51,15 @@ namespace PlasticSearch.Controllers
 
             sw.Stop();
             preprocessTime = sw.ElapsedMilliseconds;
+        }
+
+
+        [HttpPost]
+        public long IsReady()
+        {
+
+
+            return preprocessTime;
         }
     }
 }
