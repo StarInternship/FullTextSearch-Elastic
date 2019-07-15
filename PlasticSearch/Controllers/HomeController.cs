@@ -21,7 +21,7 @@ namespace PlasticSearch.Controllers
         private static ISet<string> queryTokens;
         private static readonly Stopwatch sw = new Stopwatch();
         private static long preprocessTime = -1;
-
+        private static Thread preprocessThread;
 
         public ActionResult Index()
         {
@@ -36,28 +36,38 @@ namespace PlasticSearch.Controllers
 
         public static void Preprocess()
         {
-            Importer importer = new Importer();
-
-            IDictionary<string, string> files = importer.ReadFiles();
-
-            sw.Start();
-
-            foreach (var pair in files)
+            preprocessThread = new Thread(() =>
             {
-                string cleanText = ngramSearchTokenizer.CleanText(pair.Value);
-                ngramSearchTokenizer.tokenizeData(pair.Key, cleanText, search.NgramData);
-                exactSearchTokenizer.tokenizeData(pair.Key, cleanText, search.ExactData);
-            }
+                sw.Start();
 
-            sw.Stop();
-            preprocessTime = sw.ElapsedMilliseconds;
+                Importer importer = new Importer();
+
+                IDictionary<string, string> files = importer.ReadFiles();
+
+                sw.Start();
+
+                foreach (var pair in files)
+                {
+                    string cleanText = ngramSearchTokenizer.CleanText(pair.Value);
+                    ngramSearchTokenizer.tokenizeData(pair.Key, cleanText, search.NgramData);
+                    exactSearchTokenizer.tokenizeData(pair.Key, cleanText, search.ExactData);
+                }
+
+
+
+                sw.Stop();
+                preprocessTime = sw.ElapsedMilliseconds;
+            });
+            preprocessThread.Start();
+
         }
+
 
 
         [HttpPost]
         public long IsReady()
         {
-
+            preprocessThread.Join();
 
             return preprocessTime;
         }
