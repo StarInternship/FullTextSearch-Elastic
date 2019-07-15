@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PlasticSearch.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -16,9 +17,9 @@ namespace PlasticSearch.Controllers
         }
 
         [HttpPost]
-        public string Search(string query)
+        public JsonResult Search(string query)
         {
-            return "not found";
+            return Json(new SearchResult(new HashSet<string>()));
         }
 
         [HttpPost]
