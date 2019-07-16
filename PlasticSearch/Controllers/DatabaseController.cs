@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace PlasticSearch
@@ -16,6 +17,11 @@ namespace PlasticSearch
         internal void Connect()
         {
             connection.Open();
+        }
+
+        public ISet<string> FindFiles(List<string> tokens, string tableName)
+        {
+            return new HashSet<string>();
         }
     }
 }
