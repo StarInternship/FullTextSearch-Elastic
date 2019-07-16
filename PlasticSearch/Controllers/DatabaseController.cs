@@ -35,7 +35,7 @@ namespace PlasticSearch
             dataReader.Close();
             command.Dispose();
 
-            return new HashSet<string>();
+            return result;
         }
 
         public void AddDataToken(string dataToken , string fileName , string tableName)
