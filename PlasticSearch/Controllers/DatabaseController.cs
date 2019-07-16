@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
@@ -20,6 +21,17 @@ namespace PlasticSearch
             string connectionString = @"Data Source=.;Initial Catalog=PlasticSearch;User ID=sa;Password=123456;Integrated Security=True;";
             connection = new SqlConnection(connectionString);
             connection.Open();
+            DeletePreviousData();
+        }
+
+        private void DeletePreviousData()
+        {
+            Table.values().ForEach(table =>
+            {
+                string commandString = "TRUNCATE TABLE " + table;
+                SqlCommand command = new SqlCommand(commandString, connection);
+                command.ExecuteReader();
+            });
         }
 
         public ISet<string> FindFiles(List<string> tokens, Table table)
@@ -66,9 +78,7 @@ namespace PlasticSearch
 
         private static string GenerateSelectCommand(List<string> tokens, Table table)
         {
-            StringBuilder commandString = new StringBuilder(
-                "SELECT file_name FROM " + table + " WHERE token IN ("
-                );
+            StringBuilder commandString = new StringBuilder("SELECT file_name FROM " + table + " WHERE token IN (");
             for (int i = 0; i < tokens.Count - 1; i++)
             {
                 commandString.Append("'" + tokens[i] + "', ");
@@ -92,6 +102,14 @@ namespace PlasticSearch
         public override string ToString()
         {
             return tableName;
+        }
+
+        public static List<Table> values()
+        {
+            return new List<Table>()
+            {
+                EXACT, NGRAM
+            };
         }
     }
 }
