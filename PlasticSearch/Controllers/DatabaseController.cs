@@ -24,10 +24,28 @@ namespace PlasticSearch
             return new HashSet<string>();
         }
 
-        public void AddDataToken(string dataToken , string fileName , string tableName)
+        public void AddDataToken(string dataToken, string fileName, string tableName)
         {
+            SqlCommand command;
+            SqlDataReader dataReader;
 
+
+
+            command = new SqlCommand("INSERT INTO " + tableName + " " +
+        "(token, file_name) " +
+                "VALUES(@token, @file_name)",
+        connection);
+
+            command.Parameters.Add("@token", System.Data.SqlDbType.Text);
+            command.Parameters.Add("@file_name", System.Data.SqlDbType.Text);
+
+
+            command.Parameters["@token"].Value = dataToken;
+            command.Parameters["@file_name"].Value = fileName;
+
+            dataReader = command.ExecuteReader();
+            dataReader.Close();
+            command.Dispose();
         }
-
     }
 }
