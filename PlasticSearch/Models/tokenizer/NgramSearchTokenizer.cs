@@ -9,6 +9,7 @@ namespace PlasticSearch.Models.tokenizer
 {
     class NgramSearchTokenizer : Tokenizer
     {
+        private const string NGRAM_TEABLE_NAME = "dbo.Ngram";
         private static readonly int MIN = 3;
         private static readonly int MAX = 30;
 
@@ -36,7 +37,7 @@ namespace PlasticSearch.Models.tokenizer
         }
         public override List<string> Develope(string token) => (new string[] { token }).ToList();
 
-        public override void TokenizeData(string filePath, string text, IDictionary<string, InvertedIndex> data)
+        public override void TokenizeData(string filePath, string text)
         {
             Regex.Split(text, SPLITTER).ToList().ForEach(token =>
             {
@@ -50,17 +51,7 @@ namespace PlasticSearch.Models.tokenizer
                         {
                             string newToken = token.Substring(start, length);
 
-                            if (data.ContainsKey(newToken))
-                            {
-                                data[newToken].Add(filePath);
-                            }
-                            else
-                            {
-                                data[newToken] = new InvertedIndex
-                                {
-                                    filePath
-                                };
-                            }
+                            DatabaseController.Instance.AddDataToken(newToken, filePath , NGRAM_TEABLE_NAME);
                         }
                     }
                 }

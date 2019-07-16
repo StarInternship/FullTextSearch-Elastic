@@ -23,5 +23,11 @@ namespace PlasticSearch
         {
             return new HashSet<string>();
         }
+
+        public void AddDataToken(string dataToken , string fileName , string tableName)
+        {
+
+        }
+
     }
 }

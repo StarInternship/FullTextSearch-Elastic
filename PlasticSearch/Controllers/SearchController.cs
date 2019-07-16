@@ -1,6 +1,7 @@
 ﻿using PlasticSearch.Models;
 using PlasticSearch.Models.search;
 using PlasticSearch.Models.tokenizer;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -31,22 +32,24 @@ namespace PlasticSearch.Controllers
                 sw.Start();
 
                 Importer importer = new Importer();
+                sw.Start()
 
-                Dictionary<string, string> files = importer.ReadFiles();
+                importer.ReadFiles();
 
-                sw.Start();
-
-                foreach (var pair in files)
-                {
-                    string cleanText = ngramSearchTokenizer.CleanText(pair.Value);
-                    ngramSearchTokenizer.TokenizeData(pair.Key, cleanText, search.NgramData);
-                    exactSearchTokenizer.TokenizeData(pair.Key, cleanText, search.ExactData);
-                }
 
                 sw.Stop();
                 preprocessTime = sw.ElapsedMilliseconds;
             });
             preprocessThread.Start();
+        }
+
+
+        internal void addFile(string path, string text)
+        {
+            
+                string cleanText = ngramSearchTokenizer.CleanText(text);
+                ngramSearchTokenizer.TokenizeData(path, cleanText);
+                exactSearchTokenizer.TokenizeData(path, cleanText);
         }
 
         public SearchResult Search(string query)
