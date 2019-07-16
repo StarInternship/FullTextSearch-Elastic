@@ -101,7 +101,7 @@ namespace PlasticSearch.Controllers
         public JsonResult GetFiles()
         {
             preprocessThread.Join();
-
+            
             return Json(new SearchResult(new HashSet<string>(files.Keys), 1543));
         }
     }

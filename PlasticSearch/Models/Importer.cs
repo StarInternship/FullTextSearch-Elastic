@@ -8,11 +8,12 @@ namespace PlasticSearch.Models
 {
     class Importer
     {
-        private readonly string filesPath = @"~/../../SimpleSearch/test_files";
+        private readonly string filesPath = @"C:\test_files";
 
         public Dictionary<string, string> ReadFiles()
         {
             Dictionary<string, string> files = new Dictionary<string, string>();
+
             ReadDirectory(filesPath, files);
             return files;
         }
