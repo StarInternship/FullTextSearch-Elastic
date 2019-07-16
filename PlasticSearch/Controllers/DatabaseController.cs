@@ -59,8 +59,8 @@ namespace PlasticSearch
     }
 
     public class Table {
-        public static readonly Table EXACT = new Table("Exact");
-        public static readonly Table NGRAM = new Table("Ngram");
+        public static readonly Table EXACT = new Table("dbo.Exact");
+        public static readonly Table NGRAM = new Table("dbo.Ngram");
         private readonly string tableName;
 
         private Table(string tableName)
