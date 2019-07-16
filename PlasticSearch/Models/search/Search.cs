@@ -21,9 +21,9 @@ namespace PlasticSearch.Models.search
             {
                 ISet<string> foundFilePaths = new HashSet<string>();
 
-                findFiles(queryToken, foundFilePaths, exactSearchTokenizer, ExactData);
-                findFiles(queryToken, foundFilePaths, ngramSearchTokenizer, NgramData);
-                findFiles(queryToken, foundFilePaths, fuzzySearchTokenizer, ExactData);
+                FindFiles(queryToken, foundFilePaths, exactSearchTokenizer, ExactData);
+                FindFiles(queryToken, foundFilePaths, ngramSearchTokenizer, NgramData);
+                FindFiles(queryToken, foundFilePaths, fuzzySearchTokenizer, ExactData);
 
                 if (first)
                 {
@@ -37,7 +37,7 @@ namespace PlasticSearch.Models.search
             }
         }
 
-        private void findFiles(string queryToken, ISet<string> foundFilePaths, Tokenizer queryTokenizer, IDictionary<string, InvertedIndex> data)
+        private void FindFiles(string queryToken, ISet<string> foundFilePaths, Tokenizer queryTokenizer, IDictionary<string, InvertedIndex> data)
         {
             List<string> developedTokens = queryTokenizer.Develope(queryToken);
 
@@ -45,7 +45,7 @@ namespace PlasticSearch.Models.search
             {
                 if (data.ContainsKey(token))
                 {
-                    foundFilePaths.UnionWith(data[token].Keys);
+                    foundFilePaths.UnionWith(data[token]);
                 }
             });
         }

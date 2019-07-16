@@ -5,7 +5,7 @@ using System.Web;
 
 namespace PlasticSearch.Models.search
 {
-    public class InvertedIndex : Dictionary<string, int>
+    public class InvertedIndex : HashSet<string>
     {
     }
 }
