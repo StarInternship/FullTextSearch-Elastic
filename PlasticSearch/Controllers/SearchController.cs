@@ -1,14 +1,10 @@
 ﻿using PlasticSearch.Models;
 using PlasticSearch.Models.search;
 using PlasticSearch.Models.tokenizer;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Razor.Tokenizer;
 
 namespace PlasticSearch.Controllers
 {
@@ -43,8 +39,8 @@ namespace PlasticSearch.Controllers
                 foreach (var pair in files)
                 {
                     string cleanText = ngramSearchTokenizer.CleanText(pair.Value);
-                    ngramSearchTokenizer.tokenizeData(pair.Key, cleanText, search.NgramData);
-                    exactSearchTokenizer.tokenizeData(pair.Key, cleanText, search.ExactData);
+                    ngramSearchTokenizer.TokenizeData(pair.Key, cleanText, search.NgramData);
+                    exactSearchTokenizer.TokenizeData(pair.Key, cleanText, search.ExactData);
                 }
 
                 sw.Stop();
@@ -80,7 +76,7 @@ namespace PlasticSearch.Controllers
             return sw.ElapsedMilliseconds;
         }
 
-        public long IsReady()
+        public long GetIsReady()
         {
             preprocessThread.Join();
 

@@ -32,16 +32,16 @@ namespace PlasticSearch.Models.tokenizer
                 List<String> tempDevelopedTokens = new List<string>();
                 foreach (string developedToken in developedTokens)
                 {
-                    tempDevelopedTokens.AddRange(insert(developedToken));
-                    tempDevelopedTokens.AddRange(delete(developedToken));
-                    tempDevelopedTokens.AddRange(substitute(developedToken));
+                    tempDevelopedTokens.AddRange(Insert(developedToken));
+                    tempDevelopedTokens.AddRange(Delete(developedToken));
+                    tempDevelopedTokens.AddRange(Substitute(developedToken));
                 }
                 developedTokens.AddRange(tempDevelopedTokens);
                 developedTokens.Remove(token);
             }
             return developedTokens;
         }
-        private LinkedList<String> delete(String token)
+        private LinkedList<String> Delete(String token)
         {
             LinkedList<String> deletes = new LinkedList<string>();
 
@@ -52,7 +52,7 @@ namespace PlasticSearch.Models.tokenizer
             return deletes;
         }
 
-        private LinkedList<String> insert(String token)
+        private LinkedList<String> Insert(String token)
         {
             LinkedList<String> inserts = new LinkedList<string>();
 
@@ -67,7 +67,7 @@ namespace PlasticSearch.Models.tokenizer
             return inserts;
         }
 
-        private LinkedList<String> substitute(String token)
+        private LinkedList<String> Substitute(String token)
         {
             LinkedList<String> substitutes = new LinkedList<string>();
 
@@ -82,7 +82,7 @@ namespace PlasticSearch.Models.tokenizer
             return substitutes;
         }
 
-        public override void tokenizeData(string filePath, string text, IDictionary<string, InvertedIndex> data)
+        public override void TokenizeData(string filePath, string text, IDictionary<string, InvertedIndex> data)
         {
         }
     }

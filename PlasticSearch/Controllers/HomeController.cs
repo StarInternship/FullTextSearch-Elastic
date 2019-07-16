@@ -1,13 +1,4 @@
-﻿using PlasticSearch.Models;
-using PlasticSearch.Models.search;
-using PlasticSearch.Models.tokenizer;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace PlasticSearch.Controllers
 {
@@ -27,7 +18,7 @@ namespace PlasticSearch.Controllers
         [HttpPost]
         public long IsReady()
         {
-            return SearchController.Instance.IsReady();
+            return SearchController.Instance.GetIsReady();
         }
     }
 }
