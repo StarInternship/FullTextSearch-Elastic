@@ -38,6 +38,12 @@ namespace PlasticSearch
             return new HashSet<string>();
         }
 
+        public void AddDataToken(string dataToken , string fileName , string tableName)
+        {
+
+        }
+
+
         private static string GenerateSelectCommand(List<string> tokens, Table table)
         {
             StringBuilder commandString = new StringBuilder(

@@ -12,7 +12,7 @@ namespace PlasticSearch.Models.tokenizer
 
         public string CleanText(string text) => text.ToLower();
 
-        public abstract void TokenizeData(string filePath, string text, IDictionary<string, InvertedIndex> data);
+        public abstract void TokenizeData(string filePath, string text);
 
         public abstract ISet<string> TokenizeQuery(string text);
 

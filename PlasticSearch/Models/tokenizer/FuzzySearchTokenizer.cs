@@ -82,7 +82,7 @@ namespace PlasticSearch.Models.tokenizer
             return substitutes;
         }
 
-        public override void TokenizeData(string filePath, string text, IDictionary<string, InvertedIndex> data)
+        public override void TokenizeData(string filePath, string text)
         {
         }
     }
