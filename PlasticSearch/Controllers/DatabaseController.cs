@@ -21,9 +21,9 @@ namespace PlasticSearch
             connection.Open();
         }
 
-        public ISet<string> FindFiles(List<string> tokens, string tableName)
+        public ISet<string> FindFiles(List<string> tokens, Table table)
         {
-            string commandString = GenerateSelectCommand(tokens, tableName);
+            string commandString = GenerateSelectCommand(tokens, table);
             SqlCommand command = new SqlCommand(commandString, connection);
             SqlDataReader dataReader = command.ExecuteReader();
 
@@ -38,10 +38,10 @@ namespace PlasticSearch
             return new HashSet<string>();
         }
 
-        private static string GenerateSelectCommand(List<string> tokens, string tableName)
+        private static string GenerateSelectCommand(List<string> tokens, Table table)
         {
             StringBuilder commandString = new StringBuilder(
-                "SELECT file_name FROM " + tableName + " WHERE token IN ("
+                "SELECT file_name FROM " + table + " WHERE token IN ("
                 );
             for (int i = 0; i < tokens.Count - 1; i++)
             {
@@ -49,6 +49,22 @@ namespace PlasticSearch
             }
             commandString.Append("'" + tokens[tokens.Count - 1] + "');");
             return commandString.ToString();
+        }
+    }
+
+    public class Table {
+        public static readonly Table EXACT = new Table("Exact");
+        public static readonly Table NGRAM = new Table("Ngram");
+        private readonly string tableName;
+
+        private Table(string tableName)
+        {
+            this.tableName = tableName;
+        }
+
+        public override string ToString()
+        {
+            return tableName;
         }
     }
 }
