@@ -9,8 +9,7 @@ namespace PlasticSearch
     {
         public static DatabaseController Instance { get; } = new DatabaseController();
 
-        private static readonly string connectionString = @"Data Source=.;Initial Catalog=PlasticSearch;User ID=sa;Password=123456;Integrated Security=True;";
-        private readonly SqlConnection connection = new SqlConnection(connectionString);
+        private SqlConnection connection;
 
         private DatabaseController()
         {
@@ -18,6 +17,8 @@ namespace PlasticSearch
 
         internal void Connect()
         {
+            string connectionString = @"Data Source=.;Initial Catalog=PlasticSearch;User ID=sa;Password=123456;Integrated Security=True;";
+            connection = new SqlConnection(connectionString);
             connection.Open();
         }
 
@@ -77,7 +78,8 @@ namespace PlasticSearch
         }
     }
 
-    public class Table {
+    public class Table
+    {
         public static readonly Table EXACT = new Table("dbo.Exact");
         public static readonly Table NGRAM = new Table("dbo.Ngram");
         private readonly string tableName;
