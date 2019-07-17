@@ -9,7 +9,6 @@ namespace PlasticSearch.Models.tokenizer
 {
     class NgramSearchTokenizer : Tokenizer
     {
-        private const string NGRAM_TEABLE_NAME = "dbo.Ngram";
         private static readonly int MIN = 3;
         private static readonly int MAX = 30;
 
@@ -51,7 +50,7 @@ namespace PlasticSearch.Models.tokenizer
                         {
                             string newToken = token.Substring(start, length);
 
-                            DatabaseController.Instance.AddDataToken(newToken, filePath , NGRAM_TEABLE_NAME);
+                            DatabaseController.Instance.AddDataToken(newToken, filePath , Table.NGRAM);
                         }
                     }
                 }
