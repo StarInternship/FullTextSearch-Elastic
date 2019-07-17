@@ -44,8 +44,7 @@ namespace PlasticSearch.Controllers
             preprocessThread.Start();
         }
 
-
-        internal void addFile(string path, string text)
+        internal void AddFile(string path, string text)
         {
             string cleanText = searchType["Exact"].Tokenizer.CleanText(text);
             searchType["Ngram"].Tokenizer.TokenizeData(path, cleanText);

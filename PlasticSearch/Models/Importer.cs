@@ -19,7 +19,7 @@ namespace PlasticSearch.Models
             if (File.Exists(path))
             {
                 string text = File.ReadAllText(path);
-                SearchController.Instance.addFile(path, text);
+                SearchController.Instance.AddFile(path, text);
             }
         }
 

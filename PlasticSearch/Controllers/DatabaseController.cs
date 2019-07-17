@@ -91,17 +91,6 @@ namespace PlasticSearch
                 }
             }
         }
-
-        private static string GenerateSelectCommand(List<string> tokens, Table table)
-        {
-            StringBuilder commandString = new StringBuilder("SELECT file_name FROM " + table + " WHERE token IN (");
-            for (int i = 0; i < tokens.Count - 1; i++)
-            {
-                commandString.Append("'" + tokens[i] + "', ");
-            }
-            commandString.Append("'" + tokens[tokens.Count - 1] + "');");
-            return commandString.ToString();
-        }
     }
 
     class Record
