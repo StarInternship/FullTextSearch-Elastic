@@ -26,7 +26,7 @@ namespace PlasticSearch
 
         private void DeletePreviousData()
         {
-            Table.values().ForEach(table =>
+            Table.Values().ForEach(table =>
             {
                 string commandString = "TRUNCATE TABLE " + table;
                 SqlCommand command = new SqlCommand(commandString, connection);
@@ -104,7 +104,7 @@ namespace PlasticSearch
             return tableName;
         }
 
-        public static List<Table> values()
+        public static List<Table> Values()
         {
             return new List<Table>()
             {
