@@ -8,7 +8,7 @@ namespace PlasticSearch.Models.tokenizer
 {
     class FuzzySearchTokenizer : Tokenizer
     {
-        private static readonly int FUZZINESS = 2;
+        private static readonly int FUZZINESS = 1;
         private static readonly IList<char> characters = new List<char>();
 
         static FuzzySearchTokenizer()

@@ -65,6 +65,7 @@ namespace PlasticSearch.Controllers
 
         void QueryProcess(string query)
         {
+            sw.Restart();
             queryTokens = searchType["Exact"].Tokenizer.TokenizeQuery(searchType["Exact"].Tokenizer.CleanText(query));
         }
 
