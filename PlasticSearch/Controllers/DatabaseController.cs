@@ -1,4 +1,5 @@
 ﻿
+using FastMember;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -11,13 +12,16 @@ namespace PlasticSearch
         public static DatabaseController Instance { get; } = new DatabaseController();
 
         private SqlConnection connection;
-
+        private List<Record> ngramTokens;
+        private List<Record> exactTokens;
         private DatabaseController()
         {
         }
 
         internal void Connect()
         {
+            ngramTokens = new List<Record> { };
+            exactTokens = new List<Record> { };
             string connectionString = @"Data Source=.;Initial Catalog=PlasticSearch;User ID=sa;Password=123456;Integrated Security=True;";
             connection = new SqlConnection(connectionString);
             connection.Open();
@@ -33,6 +37,47 @@ namespace PlasticSearch
                 command.ExecuteReader().Close();
                 command.Dispose();
             });
+        }
+
+
+
+
+        public void WriteTokensToDatabase()
+        {
+            writeToDB(exactTokens, Table.EXACT);
+            writeToDB(ngramTokens, Table.NGRAM);
+        }
+        private void writeToDB(List<Record> tokens, Table table)
+        {
+            using (var bcp = new SqlBulkCopy(connection))
+            {
+                
+                using (var reader = ObjectReader.Create(tokens, "token", "file_name"))
+                {
+                    bcp.DestinationTableName = table.ToString();
+                    bcp.WriteToServer(reader);
+                }
+            }
+            tokens.Clear();
+        }
+
+
+        public void AddDataToken(string dataToken, string fileName, Table table)
+        {
+            if (dataToken == "")
+                return;
+            if (table.Equals(Table.EXACT))
+            {
+                exactTokens.Add(new Record(dataToken, fileName));
+                if (exactTokens.Count > 10000)
+                    writeToDB(exactTokens, Table.EXACT);
+            }
+            else if (table.Equals(Table.NGRAM))
+            {
+                ngramTokens.Add(new Record(dataToken, fileName));
+                if (ngramTokens.Count > 10000)
+                    writeToDB(ngramTokens, Table.NGRAM);
+            }
         }
 
         public ISet<string> FindFiles(List<string> tokens, Table table)
@@ -52,30 +97,6 @@ namespace PlasticSearch
             return result;
         }
 
-        public void AddDataToken(string dataToken, string fileName, string tableName)
-        {
-            SqlCommand command;
-            SqlDataReader dataReader;
-
-
-
-            command = new SqlCommand("INSERT INTO " + tableName + " " +
-        "(token, file_name) " +
-                "VALUES(@token, @file_name)",
-        connection);
-
-            command.Parameters.Add("@token", System.Data.SqlDbType.Text);
-            command.Parameters.Add("@file_name", System.Data.SqlDbType.Text);
-
-
-            command.Parameters["@token"].Value = dataToken;
-            command.Parameters["@file_name"].Value = fileName;
-
-            dataReader = command.ExecuteReader();
-            dataReader.Close();
-            command.Dispose();
-        }
-
 
         private static string GenerateSelectCommand(List<string> tokens, Table table)
         {
@@ -87,6 +108,18 @@ namespace PlasticSearch
             commandString.Append("'" + tokens[tokens.Count - 1] + "');");
             return commandString.ToString();
         }
+    }
+
+    class Record
+    {
+        public string token { get; } = "";
+        public string file_name { get; } = "";
+        public Record(string token, string file_name)
+        {
+            this.token = token;
+            this.file_name = file_name;
+        }
+
     }
 
     public class Table

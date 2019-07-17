@@ -7,7 +7,6 @@ namespace PlasticSearch.Models.tokenizer
 {
     class ExactSearchTokenizer : Tokenizer
     {
-        private const string EXACT_TEABLE_NAME = "dbo.Exact";
 
         public override ISet<string> TokenizeQuery(string text) => Regex.Split(text, SPLITTER).ToHashSet();
 
@@ -17,7 +16,7 @@ namespace PlasticSearch.Models.tokenizer
         {
             Regex.Split(text, SPLITTER).ToList().ForEach(token =>
             {
-                DatabaseController.Instance.AddDataToken(token, filePath, EXACT_TEABLE_NAME);
+                DatabaseController.Instance.AddDataToken(token, filePath, Table.EXACT);
 
             });
         }
