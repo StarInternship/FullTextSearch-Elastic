@@ -12,16 +12,16 @@ namespace PlasticSearch
         public static DatabaseController Instance { get; } = new DatabaseController();
 
         private SqlConnection connection;
-        private List<Record> ngramTokens;
-        private List<Record> exactTokens;
+        private HashSet<Record> ngramTokens;
+        private HashSet<Record> exactTokens;
         private DatabaseController()
         {
         }
 
         internal void Connect()
         {
-            ngramTokens = new List<Record> { };
-            exactTokens = new List<Record> { };
+            ngramTokens = new HashSet<Record> { };
+            exactTokens = new HashSet<Record> { };
             string connectionString = @"Data Source=.;Initial Catalog=PlasticSearch;User ID=sa;Password=123456;Integrated Security=True;";
             connection = new SqlConnection(connectionString);
             connection.Open();
@@ -47,7 +47,7 @@ namespace PlasticSearch
             writeToDB(exactTokens, Table.EXACT);
             writeToDB(ngramTokens, Table.NGRAM);
         }
-        private void writeToDB(List<Record> tokens, Table table)
+        private void writeToDB(HashSet<Record> tokens, Table table)
         {
             using (var bcp = new SqlBulkCopy(connection))
             {
@@ -69,13 +69,13 @@ namespace PlasticSearch
             if (table.Equals(Table.EXACT))
             {
                 exactTokens.Add(new Record(dataToken, fileName));
-                if (exactTokens.Count > 10000)
+                if (exactTokens.Count > 100000)
                     writeToDB(exactTokens, Table.EXACT);
             }
             else if (table.Equals(Table.NGRAM))
             {
                 ngramTokens.Add(new Record(dataToken, fileName));
-                if (ngramTokens.Count > 10000)
+                if (ngramTokens.Count > 100000)
                     writeToDB(ngramTokens, Table.NGRAM);
             }
         }
@@ -118,6 +118,16 @@ namespace PlasticSearch
         {
             this.token = token;
             this.file_name = file_name;
+        }
+
+        public override int GetHashCode()
+        {
+            return (token+" ->"+file_name).GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj.GetHashCode() == this.GetHashCode();
         }
 
     }
