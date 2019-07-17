@@ -1,29 +1,18 @@
 ﻿using PlasticSearch.Models.tokenizer;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace PlasticSearch.Models.search
 {
     class Search
     {
-        public IDictionary<string, InvertedIndex> ExactData { get; } = new Dictionary<string, InvertedIndex>();
-        public IDictionary<string, InvertedIndex> NgramData { get; } = new Dictionary<string, InvertedIndex>();
-        private readonly Tokenizer exactSearchTokenizer = new ExactSearchTokenizer();
-        private readonly Tokenizer ngramSearchTokenizer = new NgramSearchTokenizer();
-        private readonly Tokenizer fuzzySearchTokenizer = new FuzzySearchTokenizer();
-
-        public void search(List<string> queryTokens, ISet<string> result)
+        public void search(List<string> queryTokens, ISet<string> result, Tokenizer tokenizer, Table table)
         {
             bool first = true;
             foreach (string queryToken in queryTokens)
             {
                 ISet<string> foundFilePaths = new HashSet<string>();
 
-                FindFiles(queryToken, foundFilePaths, exactSearchTokenizer, Table.EXACT);
-                FindFiles(queryToken, foundFilePaths, ngramSearchTokenizer, Table.NGRAM);
-                FindFiles(queryToken, foundFilePaths, fuzzySearchTokenizer, Table.EXACT);
+                FindFiles(queryToken, foundFilePaths, tokenizer, table);
 
                 if (first)
                 {
