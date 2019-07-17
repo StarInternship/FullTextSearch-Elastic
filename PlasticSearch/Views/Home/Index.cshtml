@@ -2,22 +2,26 @@
     ViewBag.Title = "Plastic Search";
 }
 
-<div class="jumbotron">
-    <p class="lead">Search in files here:</p>
+    <div class="jumbotron">
+        <label class="radio-inline"><input type="radio" name="search_type" checked value="Exact">Exact</label>
+        <label class="radio-inline"><input type="radio" name="search_type" value="Ngram">Ngram</label>
+        <label class="radio-inline"><input type="radio" name="search_type" value="Fuzzy">Fuzzy</label>
 
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="search" aria-label="search" aria-describedby="basic-addon2" id="query">
-        <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" id="search-btn" onclick="search()">Search</button>
+        <p class="lead">Search in files here:</p>
+
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="search" aria-label="search" aria-describedby="basic-addon2" id="query">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" id="search-btn" onclick="search()">Search</button>
+            </div>
+        </div>
+
+        <div>
+            <span id="state"></span>
+
+            <ol class="list-group" id="result-list"></ol>
         </div>
     </div>
-
-    <div>
-        <span id="state"></span>
-
-        <ol class="list-group" id="result-list"></ol>
-    </div>
-</div>
 
 @section scripts {
     <script>
@@ -45,6 +49,7 @@
 
         function search() {
             const query = $('#query').val();
+            const searchType = $("input[name='search_type']:checked").val();
 
             $('#result-list').html('');
             $('#state').html('searching');
@@ -53,7 +58,8 @@
                 url: '/home/search',
                 method: 'post',
                 data: {
-                    query: query
+                    query: query,
+                    type: searchType
                 }
             }).done((result) => {
                 var list = result.result;
