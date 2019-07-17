@@ -30,7 +30,8 @@ namespace PlasticSearch
             {
                 string commandString = "TRUNCATE TABLE " + table;
                 SqlCommand command = new SqlCommand(commandString, connection);
-                command.ExecuteReader();
+                command.ExecuteReader().Close();
+                command.Dispose();
             });
         }
 
