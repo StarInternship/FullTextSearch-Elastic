@@ -34,7 +34,6 @@ namespace PlasticSearch.Controllers
                 sw.Start();
 
                 Importer importer = new Importer();
-                sw.Start();
 
                 importer.ReadFiles();
 
