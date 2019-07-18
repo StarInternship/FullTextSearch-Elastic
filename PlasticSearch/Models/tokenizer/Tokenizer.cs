@@ -8,7 +8,7 @@ namespace PlasticSearch.Models.tokenizer
 {
     abstract class Tokenizer
     {
-        protected static readonly string SPLITTER = "[|\\s|.|'|:|_|-|?|/|@|<|>|!|(|)|]";
+        protected static readonly string SPLITTER = "[|\\s|.|'|:|_|-|?|/|@|<|>|!|\\(|\\)|]";
 
         public string CleanText(string text) => text.ToLower();
 

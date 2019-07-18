@@ -38,6 +38,7 @@ namespace PlasticSearch.Controllers
                 importer.ReadFiles();
 
                 DatabaseController.Instance.WriteTokensToDatabase();
+                DatabaseController.Instance.CreateIndex();
                 sw.Stop();
                 preprocessTime = sw.ElapsedMilliseconds;
             });
