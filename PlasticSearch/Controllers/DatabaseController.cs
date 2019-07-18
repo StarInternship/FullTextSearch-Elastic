@@ -106,7 +106,6 @@ namespace PlasticSearch
                     {
                         bcp.DestinationTableName = table.ToString();
                         bcp.WriteToServer(reader);
-                        //log: table + time + tokens.count
                     }
                 }
             }

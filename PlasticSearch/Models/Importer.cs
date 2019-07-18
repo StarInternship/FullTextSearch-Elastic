@@ -39,7 +39,6 @@ namespace PlasticSearch.Models
                     {
                         ReadFile(filePath);
                     }
-                    // log: path, SearchController.Instance.sw.ElapsedMilliseconds;
                     string[] directories = Directory.GetDirectories(path);
                     foreach (string filePath in directories)
                     {
@@ -57,7 +56,7 @@ namespace PlasticSearch.Models
             File.WriteAllText(logPath, log);
         }
 
-        public static void createLog()
+        public static void CreateLog()
         {
             if (!File.Exists(logPath))
             {

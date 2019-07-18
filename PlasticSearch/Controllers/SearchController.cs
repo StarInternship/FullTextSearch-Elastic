@@ -17,7 +17,7 @@ namespace PlasticSearch.Controllers
         private readonly Search search = new Search();
         private ISet<string> result;
         private ISet<string> queryTokens;
-        public readonly Stopwatch sw = new Stopwatch();
+        private readonly Stopwatch sw = new Stopwatch();
         private long preprocessTime = -1;
         private Thread preprocessThread;
         public List<Task> writersToDb { get; } = new List<Task>();
@@ -33,7 +33,7 @@ namespace PlasticSearch.Controllers
             preprocessThread = new Thread(() =>
             {
                 sw.Start();
-                Importer.createLog();
+                Importer.CreateLog();
 
                 Importer.WriteLog("salam");
 
@@ -50,7 +50,7 @@ namespace PlasticSearch.Controllers
 
                 DatabaseController.Instance.CreateIndex();
 
-                //sw.Stop();
+                sw.Stop();
                 preprocessTime = sw.ElapsedMilliseconds;
             });
             preprocessThread.Start();
