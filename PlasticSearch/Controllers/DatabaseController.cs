@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PlasticSearch
@@ -65,44 +66,52 @@ namespace PlasticSearch
 
         public void WriteTokensToDatabase()
         {
-            WriteToDB(exactTokens, Table.EXACT);
-            WriteToDB(ngramTokens, Table.NGRAM);
+            lock (exactTokens)
+            {
+                WriteToDB(exactTokens, Table.EXACT);
+            }
+            lock (ngramTokens)
+            {
+                WriteToDB(ngramTokens, Table.NGRAM);
+            }
         }
         private void WriteToDB(HashSet<Record> tokens, Table table)
         {
             HashSet<Record> data = new HashSet<Record>(tokens);
             Task writer = new Task(() =>
             {
-                using (var cnn = ConnectToSQLServer())
-                {
-                    using (var bcp = new SqlBulkCopy(cnn))
-                    {
+                //using (var cnn = ConnectToSQLServer())
+                //{
+                //    using (var bcp = new SqlBulkCopy(cnn))
+                //    {
 
-                        using (var reader = ObjectReader.Create(data, "token", "file_name"))
-                        {
-                            bcp.DestinationTableName = table.ToString();
-                            bcp.WriteToServer(reader);
-                        }
-                    }
-                    data.Clear();
-                }
+                //        using var reader = ObjectReader.Create(data, "token", "file_name");
+                //        bcp.DestinationTableName = table.ToString();
+                //        bcp.WriteToServer(reader);
+                //    }
+                //    data.Clear();
+                //}
+                Thread.Sleep(3000);
             });
-            SearchController.Instance.writersToDb.Add(writer); 
+            SearchController.Instance.writersToDb.Add(writer);
             writer.Start();
             tokens.Clear();
 
-
-            //using (var bcp = new SqlBulkCopy(connection))
+            //using (var cnn = ConnectToSQLServer())
             //{
-
-            //    using (var reader = ObjectReader.Create(tokens, "token", "file_name"))
+            //    using (var bcp = new SqlBulkCopy(cnn))
             //    {
-            //        bcp.DestinationTableName = table.ToString();
-            //        bcp.WriteToServer(reader);
+
+            //        using (var reader = ObjectReader.Create(tokens, "token", "file_name"))
+            //        {
+            //            bcp.DestinationTableName = table.ToString();
+            //            bcp.WriteToServer(reader);
+            //        }
             //    }
             //}
             //tokens.Clear();
         }
+
 
         public void AddDataToken(string dataToken, string fileName, Table table)
         {
@@ -110,15 +119,21 @@ namespace PlasticSearch
                 return;
             if (table.Equals(Table.EXACT))
             {
-                exactTokens.Add(new Record() { token = dataToken, file_name = fileName });
-                if (exactTokens.Count > 100000)
-                    WriteToDB(exactTokens, Table.EXACT);
+                lock (exactTokens)
+                {
+                    exactTokens.Add(new Record() { token = dataToken, file_name = fileName });
+                    if (exactTokens.Count > 100000)
+                        WriteToDB(exactTokens, Table.EXACT);
+                }
             }
             else if (table.Equals(Table.NGRAM))
             {
-                ngramTokens.Add(new Record() { token = dataToken, file_name = fileName });
-                if (ngramTokens.Count > 100000)
-                    WriteToDB(ngramTokens, Table.NGRAM);
+                lock (ngramTokens)
+                {
+                    ngramTokens.Add(new Record() { token = dataToken, file_name = fileName });
+                    if (ngramTokens.Count > 100000)
+                        WriteToDB(ngramTokens, Table.NGRAM);
+                }
             }
         }
 

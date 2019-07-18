@@ -38,6 +38,9 @@ namespace PlasticSearch.Controllers
 
                 importer.ReadFiles();
 
+
+                Task.WaitAll(importer.readers.ToArray());
+
                 DatabaseController.Instance.WriteTokensToDatabase();
 
                 Task.WaitAll(writersToDb.ToArray());
@@ -45,7 +48,7 @@ namespace PlasticSearch.Controllers
                 DatabaseController.Instance.CreateIndex();
 
                 sw.Stop();
-                preprocessTime = sw.ElapsedMilliseconds;
+                preprocessTime = writersToDb.Count();
             });
             preprocessThread.Start();
         }
