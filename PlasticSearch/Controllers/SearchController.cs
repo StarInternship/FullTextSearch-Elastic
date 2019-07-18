@@ -33,6 +33,9 @@ namespace PlasticSearch.Controllers
             preprocessThread = new Thread(() =>
             {
                 sw.Start();
+                Importer.createLog();
+
+                Importer.WriteLog("salam");
 
                 Importer importer = new Importer();
 
