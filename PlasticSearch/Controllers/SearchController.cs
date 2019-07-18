@@ -20,7 +20,7 @@ namespace PlasticSearch.Controllers
         private readonly Stopwatch sw = new Stopwatch();
         private long preprocessTime = -1;
         private Thread preprocessThread;
-
+        public List<Task> writersToDb { get; } = new List<Task>();
         private SearchController()
         {
             searchType["Exact"] = SearchType.EXACT;
@@ -39,7 +39,11 @@ namespace PlasticSearch.Controllers
                 importer.ReadFiles();
 
                 DatabaseController.Instance.WriteTokensToDatabase();
+
+                Task.WaitAll(writersToDb.ToArray());
+
                 DatabaseController.Instance.CreateIndex();
+
                 sw.Stop();
                 preprocessTime = sw.ElapsedMilliseconds;
             });
