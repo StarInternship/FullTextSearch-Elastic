@@ -33,7 +33,18 @@ namespace PlasticSearch
         {
             Table.Values().ForEach(table =>
             {
-                string commandString = "TRUNCATE TABLE " + table;
+                string commandString = "TRUNCATE TABLE " + table + "; ALTER INDEX " + table.indexName + " ON " + table + " DISABLE;";
+                SqlCommand command = new SqlCommand(commandString, connection);
+                command.ExecuteReader().Close();
+                command.Dispose();
+            });
+        }
+
+        internal void CreateIndex()
+        {
+            Table.Values().ForEach(table =>
+            {
+                string commandString = "ALTER INDEX " + table.indexName + " ON " + table + " REBUILD;";
                 SqlCommand command = new SqlCommand(commandString, connection);
                 command.ExecuteReader().Close();
                 command.Dispose();
@@ -84,13 +95,13 @@ namespace PlasticSearch
                 return;
             if (table.Equals(Table.EXACT))
             {
-                exactTokens.Add(new Record(dataToken, fileName));
+                exactTokens.Add(new Record() { token = dataToken, file_name = fileName });
                 if (exactTokens.Count > 100000)
                     WriteToDB(exactTokens, Table.EXACT);
             }
             else if (table.Equals(Table.NGRAM))
             {
-                ngramTokens.Add(new Record(dataToken, fileName));
+                ngramTokens.Add(new Record() { token = dataToken, file_name = fileName });
                 if (ngramTokens.Count > 100000)
                     WriteToDB(ngramTokens, Table.NGRAM);
             }
@@ -100,7 +111,7 @@ namespace PlasticSearch
         {
             using (var context = new PlasticSearchEntities())
             {
-                switch(table.ToString())
+                switch (table.ToString())
                 {
                     case "dbo.Exact":
                         return (from index in context.Exacts where tokens.Contains(index.token) select index.file_name).ToHashSet();
@@ -111,28 +122,12 @@ namespace PlasticSearch
                 }
             }
         }
-
-        private static string GenerateSelectCommand(List<string> tokens, Table table)
-        {
-            StringBuilder commandString = new StringBuilder("SELECT file_name FROM " + table + " WHERE token IN (");
-            for (int i = 0; i < tokens.Count - 1; i++)
-            {
-                commandString.Append("'" + tokens[i] + "', ");
-            }
-            commandString.Append("'" + tokens[tokens.Count - 1] + "');");
-            return commandString.ToString();
-        }
     }
 
     class Record
     {
-        public string token { get; }
-        public string file_name { get; }
-        public Record(string token, string file_name)
-        {
-            this.token = token;
-            this.file_name = file_name;
-        }
+        public string token { get; set; }
+        public string file_name { get; set; }
 
         public override int GetHashCode()
         {
@@ -148,13 +143,15 @@ namespace PlasticSearch
 
     public class Table
     {
-        public static readonly Table EXACT = new Table("dbo.Exact");
-        public static readonly Table NGRAM = new Table("dbo.Ngram");
+        public static readonly Table EXACT = new Table("dbo.Exact", "idx_exact");
+        public static readonly Table NGRAM = new Table("dbo.Ngram", "idx_ngram");
         private readonly string tableName;
+        public string indexName { get; }
 
-        private Table(string tableName)
+        private Table(string tableName, string indexName)
         {
             this.tableName = tableName;
+            this.indexName = indexName;
         }
 
         public override string ToString()

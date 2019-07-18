@@ -2,32 +2,33 @@
     ViewBag.Title = "Plastic Search";
 }
 
-    <div class="jumbotron">
-        <label class="radio-inline"><input type="radio" name="search_type" checked value="Exact">Exact</label>
-        <label class="radio-inline"><input type="radio" name="search_type" value="Ngram">Ngram</label>
-        <label class="radio-inline"><input type="radio" name="search_type" value="Fuzzy">Fuzzy</label>
+<div class="jumbotron">
+    <label class="radio-inline"><input type="radio" name="search_type" checked value="Exact">Exact</label>
+    <label class="radio-inline"><input type="radio" name="search_type" value="Ngram">Ngram</label>
+    <label class="radio-inline"><input type="radio" name="search_type" value="Fuzzy">Fuzzy</label>
 
-        <p class="lead">Search in files here:</p>
+    <p class="lead">Search in files here:</p>
 
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="search" aria-label="search" aria-describedby="basic-addon2" id="query">
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button" id="search-btn" onclick="search()">Search</button>
-            </div>
-        </div>
-
-        <div>
-            <span id="state"></span>
-
-            <ol class="list-group" id="result-list"></ol>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="search" aria-label="search" aria-describedby="basic-addon2" id="query">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" id="search-btn" onclick="search()">Search</button>
         </div>
     </div>
 
+    <div>
+        <span id="state"></span>
+
+        <ol class="list-group" id="result-list"></ol>
+    </div>
+</div>
+
 @section scripts {
     <script>
+        var ready = false;
 
         document.getElementById("query").addEventListener("keyup", function (event) {
-            if (event.keyCode === 13) {
+            if (event.keyCode === 13 && ready) {
                 event.preventDefault();
                 document.getElementById("search-btn").click();
             }
@@ -41,6 +42,7 @@
                 url: '/home/isReady',
                 method: 'post'
             }).done((duration) => {
+                ready = true;
                 $('#search-btn').attr("disabled", false);
                 $('#search-btn').html('Search');
                 $('#state').html('Preprocess duration: ' + duration + ' ms');

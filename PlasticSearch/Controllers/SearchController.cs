@@ -39,14 +39,14 @@ namespace PlasticSearch.Controllers
                 importer.ReadFiles();
 
                 DatabaseController.Instance.WriteTokensToDatabase();
+                DatabaseController.Instance.CreateIndex();
                 sw.Stop();
                 preprocessTime = sw.ElapsedMilliseconds;
             });
             preprocessThread.Start();
         }
 
-
-        internal void addFile(string path, string text)
+        internal void AddFile(string path, string text)
         {
                           
             string cleanText = searchType["Exact"].Tokenizer.CleanText(text);
