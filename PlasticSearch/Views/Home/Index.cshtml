@@ -21,7 +21,19 @@
     <div>
         <span id="state"></span>
 
-        <ol class="list-group" id="result-list"></ol>
+        <table style="width: 100%">
+            <tr style="vertical-align:top">
+                <td style="width: 30%">
+                    <ol class="list-group" id="result-list-0"></ol>
+                </td>
+                <td style="width: 30%">
+                    <ol class="list-group" id="result-list-1"></ol>
+                </td>
+                <td style="width: 30%">
+                    <ol class="list-group" id="result-list-2"></ol>
+                </td>
+            </tr>
+        </table>
     </div>
 </div>
 
@@ -51,11 +63,18 @@
             });
         });
 
+        function emptyLists() {
+            for (var i = 0; i < 3; i++) {
+                $('#result-list-' + i).html('');
+            }
+        }
+
         function search() {
             const query = $('#query').val();
             const searchType = $("input[name='search_type']:checked").val();
 
-            $('#result-list').html('');
+            emptyLists();
+
             $('#state').html('searching');
 
             $.ajax({
@@ -71,7 +90,7 @@
 
                 $.each(list, (index, value) => {
                     found = true;
-                    $('#result-list').append('<li class="list-group-item list-group-item-action">' + value + '</li>')
+                    $('#result-list-' + index % 3).append('<li class="list-group-item list-group-item-action">' + value + '</li>')
                 });
 
                 if (!found) {

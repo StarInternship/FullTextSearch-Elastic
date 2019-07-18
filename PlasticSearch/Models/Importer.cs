@@ -37,6 +37,7 @@ namespace PlasticSearch.Models
                     {
                         ReadFile(filePath);
                     }
+                    // log: path, SearchController.Instance.sw.ElapsedMilliseconds;
                     string[] directories = Directory.GetDirectories(path);
                     foreach (string filePath in directories)
                     {
