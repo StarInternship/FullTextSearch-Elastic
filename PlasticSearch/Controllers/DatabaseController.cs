@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PlasticSearch
 {
@@ -46,6 +47,25 @@ namespace PlasticSearch
         }
         private void WriteToDB(HashSet<Record> tokens, Table table)
         {
+            //HashSet<Record> data = new HashSet<Record>(tokens);
+            //Task writer = new Task(() =>
+            //{
+            //    using (var bcp = new SqlBulkCopy(connection))
+            //    {
+
+            //        using (var reader = ObjectReader.Create(data, "token", "file_name"))
+            //        {
+            //            bcp.DestinationTableName = table.ToString();
+            //            bcp.WriteToServer(reader);
+            //        }
+            //    }
+            //    data.Clear();
+            //});
+
+            //writer.Start();
+            //tokens.Clear();
+
+
             using (var bcp = new SqlBulkCopy(connection))
             {
 

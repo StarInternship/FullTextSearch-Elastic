@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace PlasticSearch.Controllers
 {
@@ -47,6 +48,7 @@ namespace PlasticSearch.Controllers
 
         internal void addFile(string path, string text)
         {
+                          
             string cleanText = searchType["Exact"].Tokenizer.CleanText(text);
             searchType["Ngram"].Tokenizer.TokenizeData(path, cleanText);
             searchType["Exact"].Tokenizer.TokenizeData(path, cleanText);
