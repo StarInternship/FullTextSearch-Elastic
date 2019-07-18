@@ -19,7 +19,7 @@ namespace PlasticSearch
         {
         }
 
-        internal void Connect()
+        internal SqlConnection Connect()
         {
             ngramTokens = new HashSet<Record> { };
             exactTokens = new HashSet<Record> { };
@@ -27,7 +27,18 @@ namespace PlasticSearch
             connection = new SqlConnection(connectionString);
             connection.Open();
             DeletePreviousData();
+            return connection;
         }
+
+        private SqlConnection ConnectToSQLServer()
+        {
+            string connectionString = @"Data Source=.;Initial Catalog=PlasticSearch;User ID=sa;Password=123456;Integrated Security=True;";
+            SqlConnection sqlConnection = new SqlConnection(connectionString);
+            sqlConnection.Open();
+            return sqlConnection;
+        }
+
+
 
         private void DeletePreviousData()
         {
@@ -61,16 +72,19 @@ namespace PlasticSearch
             //HashSet<Record> data = new HashSet<Record>(tokens);
             //Task writer = new Task(() =>
             //{
-            //    using (var bcp = new SqlBulkCopy(connection))
+            //    using (var cnn = ConnectToSQLServer())
             //    {
-
-            //        using (var reader = ObjectReader.Create(data, "token", "file_name"))
+            //        using (var bcp = new SqlBulkCopy(cnn))
             //        {
-            //            bcp.DestinationTableName = table.ToString();
-            //            bcp.WriteToServer(reader);
+
+            //            using (var reader = ObjectReader.Create(data, "token", "file_name"))
+            //            {
+            //                bcp.DestinationTableName = table.ToString();
+            //                bcp.WriteToServer(reader);
+            //            }
             //        }
+            //        data.Clear();
             //    }
-            //    data.Clear();
             //});
 
             //writer.Start();
