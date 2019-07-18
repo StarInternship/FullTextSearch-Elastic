@@ -33,6 +33,9 @@ namespace PlasticSearch.Controllers
             preprocessThread = new Thread(() =>
             {
                 sw.Start();
+                Importer.createLog();
+
+                Importer.WriteLog("salam");
 
                 Importer importer = new Importer();
 
@@ -43,12 +46,12 @@ namespace PlasticSearch.Controllers
 
                 DatabaseController.Instance.WriteTokensToDatabase();
 
-                Task.WaitAll(writersToDb.ToArray());
+                //Task.WaitAll(writersToDb.ToArray());
 
                 DatabaseController.Instance.CreateIndex();
 
                 sw.Stop();
-                preprocessTime = writersToDb.Count();
+                preprocessTime = sw.ElapsedMilliseconds;
             });
             preprocessThread.Start();
         }

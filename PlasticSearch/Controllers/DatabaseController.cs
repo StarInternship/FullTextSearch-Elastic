@@ -4,6 +4,7 @@ using PlasticSearch.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -77,39 +78,40 @@ namespace PlasticSearch
         }
         private void WriteToDB(HashSet<Record> tokens, Table table)
         {
-            HashSet<Record> data = new HashSet<Record>(tokens);
-            Task writer = new Task(() =>
-            {
-                //using (var cnn = ConnectToSQLServer())
-                //{
-                //    using (var bcp = new SqlBulkCopy(cnn))
-                //    {
-
-                //        using var reader = ObjectReader.Create(data, "token", "file_name");
-                //        bcp.DestinationTableName = table.ToString();
-                //        bcp.WriteToServer(reader);
-                //    }
-                //    data.Clear();
-                //}
-                Thread.Sleep(3000);
-            });
-            SearchController.Instance.writersToDb.Add(writer);
-            writer.Start();
-            tokens.Clear();
-
-            //using (var cnn = ConnectToSQLServer())
+            //HashSet<Record> data = new HashSet<Record>(tokens);
+            //Task writer = new Task(() =>
             //{
-            //    using (var bcp = new SqlBulkCopy(cnn))
+            //    using (var cnn = ConnectToSQLServer())
             //    {
-
-            //        using (var reader = ObjectReader.Create(tokens, "token", "file_name"))
+            //        using (var bcp = new SqlBulkCopy(cnn))
             //        {
+
+            //            using var reader = ObjectReader.Create(data, "token", "file_name");
             //            bcp.DestinationTableName = table.ToString();
             //            bcp.WriteToServer(reader);
             //        }
+            //        data.Clear();
             //    }
-            //}
+            //    Thread.Sleep(100);
+            //});
+            //SearchController.Instance.writersToDb.Add(writer);
+            //writer.Start();
             //tokens.Clear();
+
+
+            using (var cnn = ConnectToSQLServer())
+            {
+                using (var bcp = new SqlBulkCopy(cnn))
+                {
+
+                    using (var reader = ObjectReader.Create(tokens, "token", "file_name"))
+                    {
+                        bcp.DestinationTableName = table.ToString();
+                        bcp.WriteToServer(reader);
+                    }
+                }
+            }
+            tokens.Clear();
         }
 
 
