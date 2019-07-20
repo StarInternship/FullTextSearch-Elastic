@@ -16,7 +16,6 @@ namespace PlasticSearch.Models
         public void ReadFiles()
         {
             ReadDirectory(filesPath);
-
         }
 
         public void ReadFile(string path)
@@ -32,7 +31,6 @@ namespace PlasticSearch.Models
         {
             if (Directory.Exists(path))
             {
-
                 string[] files = Directory.GetFiles(path);
                 foreach (string filePath in files)
                 {
@@ -43,10 +41,6 @@ namespace PlasticSearch.Models
                 {
                     ReadDirectory(filePath);
                 }
-
-
-
-
             }
         }
 
