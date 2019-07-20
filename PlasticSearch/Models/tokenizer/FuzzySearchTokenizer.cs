@@ -8,7 +8,7 @@ namespace PlasticSearch.Models.tokenizer
 {
     class FuzzySearchTokenizer : Tokenizer
     {
-        private static readonly int FUZZINESS = 2;
+        private static readonly int FUZZINESS = 1;
         private static readonly IList<char> characters = new List<char>();
 
         static FuzzySearchTokenizer()
@@ -82,7 +82,7 @@ namespace PlasticSearch.Models.tokenizer
             return substitutes;
         }
 
-        public override void TokenizeData(string filePath, string text, IDictionary<string, InvertedIndex> data)
+        public override void TokenizeData(string filePath, string text)
         {
         }
     }

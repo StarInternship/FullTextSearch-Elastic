@@ -36,7 +36,7 @@ namespace PlasticSearch.Models.tokenizer
         }
         public override List<string> Develope(string token) => (new string[] { token }).ToList();
 
-        public override void TokenizeData(string filePath, string text, IDictionary<string, InvertedIndex> data)
+        public override void TokenizeData(string filePath, string text)
         {
             Regex.Split(text, SPLITTER).ToList().ForEach(token =>
             {
@@ -50,17 +50,7 @@ namespace PlasticSearch.Models.tokenizer
                         {
                             string newToken = token.Substring(start, length);
 
-                            if (data.ContainsKey(newToken))
-                            {
-                                data[newToken].Add(filePath);
-                            }
-                            else
-                            {
-                                data[newToken] = new InvertedIndex
-                                {
-                                    filePath
-                                };
-                            }
+                            DatabaseController.Instance.AddDataToken(newToken, filePath , Table.NGRAM);
                         }
                     }
                 }

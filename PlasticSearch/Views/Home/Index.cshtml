@@ -3,6 +3,12 @@
 }
 
 <div class="jumbotron">
+    <p class="lead">
+        <label class="radio-inline" style="margin:0.5%"><input type="radio" name="search_type" checked value="Exact">Exact</label>
+        <label class="radio-inline" style="margin:0.5%"><input type="radio" name="search_type" value="Ngram">Ngram</label>
+        <label class="radio-inline" style="margin:0.5%"><input type="radio" name="search_type" value="Fuzzy">Fuzzy</label>
+    </p>
+
     <p class="lead">Search in files here:</p>
 
     <div class="input-group mb-3">
@@ -15,15 +21,28 @@
     <div>
         <span id="state"></span>
 
-        <ol class="list-group" id="result-list"></ol>
+        <table style="width: 100%">
+            <tr style="vertical-align:top">
+                <td style="width: 30%">
+                    <ol class="list-group" id="result-list-0"></ol>
+                </td>
+                <td style="width: 30%">
+                    <ol class="list-group" id="result-list-1"></ol>
+                </td>
+                <td style="width: 30%">
+                    <ol class="list-group" id="result-list-2"></ol>
+                </td>
+            </tr>
+        </table>
     </div>
 </div>
 
 @section scripts {
     <script>
+        var ready = false;
 
         document.getElementById("query").addEventListener("keyup", function (event) {
-            if (event.keyCode === 13) {
+            if (event.keyCode === 13 && ready) {
                 event.preventDefault();
                 document.getElementById("search-btn").click();
             }
@@ -37,23 +56,33 @@
                 url: '/home/isReady',
                 method: 'post'
             }).done((duration) => {
+                ready = true;
                 $('#search-btn').attr("disabled", false);
                 $('#search-btn').html('Search');
                 $('#state').html('Preprocess duration: ' + duration + ' ms');
             });
         });
 
+        function emptyLists() {
+            for (var i = 0; i < 3; i++) {
+                $('#result-list-' + i).html('');
+            }
+        }
+
         function search() {
             const query = $('#query').val();
+            const searchType = $("input[name='search_type']:checked").val();
 
-            $('#result-list').html('');
+            emptyLists();
+
             $('#state').html('searching');
 
             $.ajax({
                 url: '/home/search',
                 method: 'post',
                 data: {
-                    query: query
+                    query: query,
+                    type: searchType
                 }
             }).done((result) => {
                 var list = result.result;
@@ -61,7 +90,7 @@
 
                 $.each(list, (index, value) => {
                     found = true;
-                    $('#result-list').append('<li class="list-group-item list-group-item-action">' + value + '</li>')
+                    $('#result-list-' + index % 3).append('<li class="list-group-item list-group-item-action">' + value + '</li>')
                 });
 
                 if (!found) {

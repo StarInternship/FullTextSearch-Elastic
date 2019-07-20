@@ -10,9 +10,9 @@ namespace PlasticSearch.Controllers
         }
 
         [HttpPost]
-        public JsonResult Search(string query)
+        public JsonResult Search(string query, string type)
         {
-            return Json(SearchController.Instance.Search(query));
+            return Json(SearchController.Instance.Search(query, type));
         }
 
         [HttpPost]
