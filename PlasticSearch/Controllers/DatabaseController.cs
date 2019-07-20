@@ -36,16 +36,6 @@ namespace PlasticSearch
             return connection;
         }
 
-        private SqlConnection ConnectToSQLServer()
-        {
-            string connectionString = @"Data Source=.;Initial Catalog=PlasticSearch;User ID=sa;Password=123456;Integrated Security=True;";
-            SqlConnection sqlConnection = new SqlConnection(connectionString);
-            sqlConnection.Open();
-            return sqlConnection;
-        }
-
-
-
         private void DeletePreviousData()
         {
             Table.Values().ForEach(table =>
@@ -81,7 +71,7 @@ namespace PlasticSearch
         }
         private void WriteToDB(HashSet<Record> tokens, Table table)
         {
-            
+
             if (writer != null)
             {
                 writer.Wait();
@@ -90,17 +80,12 @@ namespace PlasticSearch
             tokens.Clear();
             writer = new Task(() =>
             {
-
-                using (var cnn = ConnectToSQLServer())
+                using (var bcp = new SqlBulkCopy(connection))
                 {
-                    using (var bcp = new SqlBulkCopy(cnn))
+                    using (var reader = ObjectReader.Create(data, "token", "file_name"))
                     {
-
-                        using (var reader = ObjectReader.Create(data, "token", "file_name"))
-                        {
-                            bcp.DestinationTableName = table.ToString();
-                            bcp.WriteToServer(reader);
-                        }
+                        bcp.DestinationTableName = table.ToString();
+                        bcp.WriteToServer(reader);
                     }
                 }
                 data.Clear();
