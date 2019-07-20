@@ -35,8 +35,6 @@ namespace PlasticSearch.Controllers
                 sw.Start();
                 Importer.CreateLog();
 
-                Importer.WriteLog("salam");
-
                 Importer importer = new Importer();
 
                 importer.ReadFiles();
