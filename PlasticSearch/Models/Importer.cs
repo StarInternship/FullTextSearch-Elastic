@@ -55,7 +55,7 @@ namespace PlasticSearch.Models
             File.WriteAllText(logPath, log);
         }
 
-        public static void createLog()
+        public static void CreateLog()
         {
             if (!File.Exists(logPath))
             {
