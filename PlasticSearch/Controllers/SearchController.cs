@@ -41,12 +41,9 @@ namespace PlasticSearch.Controllers
 
                 importer.ReadFiles();
 
-
-                Task.WaitAll(importer.readers.ToArray());
-
                 DatabaseController.Instance.WriteTokensToDatabase();
 
-                //Task.WaitAll(writersToDb.ToArray());
+                DatabaseController.Instance.writer.Wait();
 
                 DatabaseController.Instance.CreateIndex();
 

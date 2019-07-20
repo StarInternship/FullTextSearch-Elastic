@@ -32,22 +32,21 @@ namespace PlasticSearch.Models
         {
             if (Directory.Exists(path))
             {
-                Task reader = new Task(() =>
-                {
-                    string[] files = Directory.GetFiles(path);
-                    foreach (string filePath in files)
-                    {
-                        ReadFile(filePath);
-                    }
-                    string[] directories = Directory.GetDirectories(path);
-                    foreach (string filePath in directories)
-                    {
-                        ReadDirectory(filePath);
-                    }
-                });
-                reader.Start(); 
 
-                readers.Add(reader);
+                string[] files = Directory.GetFiles(path);
+                foreach (string filePath in files)
+                {
+                    ReadFile(filePath);
+                }
+                string[] directories = Directory.GetDirectories(path);
+                foreach (string filePath in directories)
+                {
+                    ReadDirectory(filePath);
+                }
+
+
+
+
             }
         }
 
@@ -63,6 +62,6 @@ namespace PlasticSearch.Models
                 File.Create(logPath);
             }
         }
-}
+    }
 
 }

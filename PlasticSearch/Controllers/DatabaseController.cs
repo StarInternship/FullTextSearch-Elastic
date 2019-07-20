@@ -18,6 +18,9 @@ namespace PlasticSearch
         private SqlConnection connection;
         private HashSet<Record> ngramTokens;
         private HashSet<Record> exactTokens;
+
+        public Task writer { get; set; }
+
         private DatabaseController()
         {
         }
@@ -78,40 +81,31 @@ namespace PlasticSearch
         }
         private void WriteToDB(HashSet<Record> tokens, Table table)
         {
-            //HashSet<Record> data = new HashSet<Record>(tokens);
-            //Task writer = new Task(() =>
-            //{
-            //    using (var cnn = ConnectToSQLServer())
-            //    {
-            //        using (var bcp = new SqlBulkCopy(cnn))
-            //        {
-
-            //            using var reader = ObjectReader.Create(data, "token", "file_name");
-            //            bcp.DestinationTableName = table.ToString();
-            //            bcp.WriteToServer(reader);
-            //        }
-            //        data.Clear();
-            //    }
-            //    Thread.Sleep(100);
-            //});
-            //SearchController.Instance.writersToDb.Add(writer);
-            //writer.Start();
-            //tokens.Clear();
-
-
-            using (var cnn = ConnectToSQLServer())
+            
+            if (writer != null)
             {
-                using (var bcp = new SqlBulkCopy(cnn))
-                {
+                writer.Wait();
+            }
+            var data = new HashSet<Record>(tokens);
+            tokens.Clear();
+            writer = new Task(() =>
+            {
 
-                    using (var reader = ObjectReader.Create(tokens, "token", "file_name"))
+                using (var cnn = ConnectToSQLServer())
+                {
+                    using (var bcp = new SqlBulkCopy(cnn))
                     {
-                        bcp.DestinationTableName = table.ToString();
-                        bcp.WriteToServer(reader);
+
+                        using (var reader = ObjectReader.Create(data, "token", "file_name"))
+                        {
+                            bcp.DestinationTableName = table.ToString();
+                            bcp.WriteToServer(reader);
+                        }
                     }
                 }
-            }
-            tokens.Clear();
+                data.Clear();
+            });
+            writer.Start();
         }
 
 
