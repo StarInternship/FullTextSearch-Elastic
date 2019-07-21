@@ -23,9 +23,9 @@ namespace PlasticSearch
             {
 
                 Importer.CreateLog();
+                Connect();
                 sw.Start();
                 Importer.WriteLog("starting...");
-                Connect();
 
                 Importer.WriteLog("connect " + sw.ElapsedMilliseconds + " ms");
 
