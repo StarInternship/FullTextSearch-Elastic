@@ -73,7 +73,7 @@ namespace PlasticSearch
             var searchResponse = client.Search<Text>(s => s.Query(q => q.Match(m => m.Field(f => f.text).Query(query))));
             var texts = searchResponse.Documents;
 
-            return new SearchResult(new HashSet<Text>(texts).Select(x => x.fileName), searchResponse.Took);
+            return new SearchResult(new HashSet<Text>(texts), searchResponse.Took);
         }
 
         public long IsReady()
@@ -84,7 +84,7 @@ namespace PlasticSearch
         }
     }
 
-    class Text
+    public class Text
     {
         public string text { get; set; }
         public string fileName { get; set; }

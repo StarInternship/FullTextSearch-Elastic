@@ -4,10 +4,10 @@ namespace PlasticSearch.Models
 {
     public class SearchResult
     {
-        public IEnumerable<string> Result { get; }
+        public IEnumerable<Text> Result { get; }
         public long Time { get; }
 
-        public SearchResult(IEnumerable<string> result, long time)
+        public SearchResult(IEnumerable<Text> result, long time)
         {
             Result = result;
             Time = time;

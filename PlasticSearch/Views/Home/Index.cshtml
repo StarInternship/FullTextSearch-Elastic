@@ -21,6 +21,25 @@
     <div>
         <span id="state"></span>
 
+        <div class="row">
+            <div class="col-4">
+                <div class="list-group" id="result-list" role="tablist">
+                    <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a>
+                    <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Profile</a>
+                    <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
+                    <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">...</div>
+                    <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">...</div>
+                    <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
+                    <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
+                </div>
+            </div>
+        </div>
+
         <table style="width: 100%">
             <tr style="vertical-align:top">
                 <td style="width: 30%">
@@ -90,7 +109,13 @@
 
                 $.each(list, (index, value) => {
                     found = true;
-                    $('#result-list-' + index % 3).append('<li class="list-group-item list-group-item-action">' + value + '</li>')
+                    $('#result-list').append(
+                        '<a class="list-group-item list-group-item-action" id="list-' + value.fileName + '-list" data-toggle="list" href="#list-' + value.fileName + '" role="tab" aria-controls="' + value.fileName + '">' + value.fileName + '</a>'
+                    );
+                    $('#nav-tabContent').append(
+                        '<div class="tab-pane fade" id="list-' + value.fileName + '" role="tabpanel" aria-labelledby="#list-' + value.fileName + '"><p>' + value.text + '</p></div>'
+                    );
+                    nav - tabContent
                 });
 
                 if (!found) {
@@ -100,5 +125,10 @@
                 }
             });
         }
+
+        $('#result-list a').on('click', e => {
+            e.preventDefault()
+            $(this).tab('show')
+        })
     </script>
 }
