@@ -39,20 +39,6 @@
                 </div>
             </div>
         </div>
-
-        <table style="width: 100%">
-            <tr style="vertical-align:top">
-                <td style="width: 30%">
-                    <ol class="list-group" id="result-list-0"></ol>
-                </td>
-                <td style="width: 30%">
-                    <ol class="list-group" id="result-list-1"></ol>
-                </td>
-                <td style="width: 30%">
-                    <ol class="list-group" id="result-list-2"></ol>
-                </td>
-            </tr>
-        </table>
     </div>
 </div>
 
@@ -83,9 +69,8 @@
         });
 
         function emptyLists() {
-            for (var i = 0; i < 3; i++) {
-                $('#result-list-' + i).html('');
-            }
+            $('#result-list').html('');
+            $('#nav-tabContent').html('');
         }
 
         function search() {
@@ -110,12 +95,11 @@
                 $.each(list, (index, value) => {
                     found = true;
                     $('#result-list').append(
-                        '<a class="list-group-item list-group-item-action" id="list-' + value.fileName + '-list" data-toggle="list" href="#list-' + value.fileName + '" role="tab" aria-controls="' + value.fileName + '">' + value.fileName + '</a>'
+                        '<a class="list-group-item list-group-item-action" id="list-' + index + '-list" data-toggle="list" href="#list-' + index + '" role="tab" aria-controls="' + index + '">' + value.fileName + '</a>'
                     );
                     $('#nav-tabContent').append(
-                        '<div class="tab-pane fade" id="list-' + value.fileName + '" role="tabpanel" aria-labelledby="#list-' + value.fileName + '"><p>' + value.text + '</p></div>'
+                        '<div class="tab-pane fade" id="list-' + index + '" role="tabpanel" aria-labelledby="#list-' + index + '"><p>' + value.text + '</p></div>'
                     );
-                    nav - tabContent
                 });
 
                 if (!found) {
@@ -125,10 +109,5 @@
                 }
             });
         }
-
-        $('#result-list a').on('click', e => {
-            e.preventDefault()
-            $(this).tab('show')
-        })
     </script>
 }
