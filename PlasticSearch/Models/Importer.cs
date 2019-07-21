@@ -43,7 +43,7 @@ namespace PlasticSearch.Models
 
         public static void WriteLog(string log)
         {
-            File.WriteAllText(logPath, log);
+            File.AppendAllText(logPath, log + "\n");
         }
 
         public static void CreateLog()
@@ -52,6 +52,7 @@ namespace PlasticSearch.Models
             {
                 File.Create(logPath);
             }
+            File.WriteAllText(logPath, "");
         }
     }
 
