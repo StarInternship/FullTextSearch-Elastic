@@ -1,14 +1,40 @@
 ﻿using Nest;
 using System;
 using System.Collections.Generic;
+using PlasticSearch.Models;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace PlasticSearch
 {
     internal class DatabaseController
     {
         public static DatabaseController Instance { get; } = new DatabaseController();
+        private ISet<string> result;
+        private readonly Stopwatch sw = new Stopwatch();
+        private long preprocessTime = -1;
+        private Task preprocessTask;
         private List<Text> files = new List<Text>();
         private ElasticClient client;
+
+        public void Preprocess()
+        {
+            preprocessTask = new Task(() =>
+            {
+                sw.Start();
+                Importer.CreateLog();
+
+                Importer importer = new Importer();
+
+                importer.ReadFiles();
+
+                InsertFiles();
+
+                sw.Stop();
+                preprocessTime = sw.ElapsedMilliseconds;
+            });
+            preprocessTask.Start();
+        }
 
         public void Connect()
         {
@@ -33,9 +59,16 @@ namespace PlasticSearch
 
         }
 
-        public List<string> search(string text)
+        public SearchResult Search(string query, string type)
         {
-            return new List<string>();
+            return new SearchResult(result, 0);
+        }
+
+        public long IsReady()
+        {
+            preprocessTask.Wait();
+
+            return preprocessTime;
         }
     }
 
