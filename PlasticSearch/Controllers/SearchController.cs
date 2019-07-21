@@ -20,7 +20,6 @@ namespace PlasticSearch.Controllers
         private readonly Stopwatch sw = new Stopwatch();
         private long preprocessTime = -1;
         private Thread preprocessThread;
-        public List<Task> writersToDb { get; } = new List<Task>();
         private SearchController()
         {
             searchType["Exact"] = SearchType.EXACT;
@@ -39,11 +38,7 @@ namespace PlasticSearch.Controllers
 
                 importer.ReadFiles();
 
-                DatabaseController.Instance.WriteTokensToDatabase();
-
-                DatabaseController.Instance.writer.Wait();
-
-                DatabaseController.Instance.CreateIndex();
+                DatabaseController.Instance.sendFiles();
 
                 sw.Stop();
                 preprocessTime = sw.ElapsedMilliseconds;
@@ -51,13 +46,6 @@ namespace PlasticSearch.Controllers
             preprocessThread.Start();
         }
 
-        internal void AddFile(string path, string text)
-        {
-                          
-            string cleanText = searchType["Exact"].Tokenizer.CleanText(text);
-            searchType["Ngram"].Tokenizer.TokenizeData(path, cleanText);
-            searchType["Exact"].Tokenizer.TokenizeData(path, cleanText);
-        }
 
         public SearchResult Search(string query, string type)
         {

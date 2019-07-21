@@ -1,5 +1,7 @@
 ﻿
+using Elasticsearch.Net;
 using FastMember;
+using Nest;
 using PlasticSearch.Controllers;
 using System;
 using System.Collections.Generic;
@@ -15,134 +17,38 @@ namespace PlasticSearch
     internal class DatabaseController
     {
         public static DatabaseController Instance { get; } = new DatabaseController();
-        private SqlConnection connection;
-        private HashSet<Record> ngramTokens;
-        private HashSet<Record> exactTokens;
+        private LinkedList<Text> files = new LinkedList<Text>();
+        ElasticClient client;
 
-        public Task writer { get; set; }
-
-        private DatabaseController()
+        public void Connect()
         {
+
         }
 
-        internal SqlConnection Connect()
+        public void AddToSendingFiles(string fileName, string text)
         {
-            ngramTokens = new HashSet<Record> { };
-            exactTokens = new HashSet<Record> { };
-            string connectionString = @"Data Source=.;Initial Catalog=PlasticSearch;User ID=sa;Password=123456;Integrated Security=True;";
-            connection = new SqlConnection(connectionString);
-            connection.Open();
-            DeletePreviousData();
-            return connection;
+
         }
 
-        private void DeletePreviousData()
+        public void sendFiles()
         {
-            Table.Values().ForEach(table =>
-            {
-                string commandString = "TRUNCATE TABLE " + table + "; ALTER INDEX " + table.indexName + " ON " + table + " DISABLE;";
-                SqlCommand command = new SqlCommand(commandString, connection);
-                command.ExecuteReader().Close();
-                command.Dispose();
-            });
+
         }
 
-        internal void CreateIndex()
+        public List<string> search(string text)
         {
-            Table.Values().ForEach(table =>
-            {
-                string commandString = "ALTER INDEX " + table.indexName + " ON " + table + " REBUILD;";
-                SqlCommand command = new SqlCommand(commandString, connection);
-                command.ExecuteReader().Close();
-                command.Dispose();
-            });
-        }
-
-        public void WriteTokensToDatabase()
-        {
-            lock (exactTokens)
-            {
-                WriteToDB(exactTokens, Table.EXACT);
-            }
-            lock (ngramTokens)
-            {
-                WriteToDB(ngramTokens, Table.NGRAM);
-            }
-        }
-        private void WriteToDB(HashSet<Record> tokens, Table table)
-        {
-
-            if (writer != null)
-            {
-                writer.Wait();
-            }
-            var data = new HashSet<Record>(tokens);
-            tokens.Clear();
-            writer = new Task(() =>
-            {
-                using (var bcp = new SqlBulkCopy(connection))
-                {
-                    using (var reader = ObjectReader.Create(data, "token", "file_name"))
-                    {
-                        bcp.DestinationTableName = table.ToString();
-                        bcp.WriteToServer(reader);
-                    }
-                }
-                data.Clear();
-            });
-            writer.Start();
-        }
-
-
-        public void AddDataToken(string dataToken, string fileName, Table table)
-        {
-            if (dataToken == "")
-                return;
-            if (table.Equals(Table.EXACT))
-            {
-                lock (exactTokens)
-                {
-                    exactTokens.Add(new Record() { token = dataToken, file_name = fileName });
-                    if (exactTokens.Count > 100000)
-                        WriteToDB(exactTokens, Table.EXACT);
-                }
-            }
-            else if (table.Equals(Table.NGRAM))
-            {
-                lock (ngramTokens)
-                {
-                    ngramTokens.Add(new Record() { token = dataToken, file_name = fileName });
-                    if (ngramTokens.Count > 100000)
-                        WriteToDB(ngramTokens, Table.NGRAM);
-                }
-            }
-        }
-
-        public ISet<string> FindFiles(List<string> tokens, Table table)
-        {
-            using (var context = new PlasticSearchEntities())
-            {
-                switch (table.ToString())
-                {
-                    case "dbo.Exact":
-                        return (from index in context.Exacts where tokens.Contains(index.token) select index.file_name).ToHashSet();
-                    case "dbo.Ngram":
-                        return (from index in context.Ngrams where tokens.Contains(index.token) select index.file_name).ToHashSet();
-                    default:
-                        return new HashSet<string>();
-                }
-            }
+            return null;
         }
     }
 
-    class Record
+    class Text
     {
-        public string token { get; set; }
-        public string file_name { get; set; }
+        public string text { get; set; }
+        public string fileName { get; set; }
 
         public override int GetHashCode()
         {
-            return (token + " ->" + file_name).GetHashCode();
+            return (text + " ->" + fileName).GetHashCode();
         }
 
         public override bool Equals(object obj)
@@ -154,15 +60,13 @@ namespace PlasticSearch
 
     public class Table
     {
-        public static readonly Table EXACT = new Table("dbo.Exact", "idx_exact");
-        public static readonly Table NGRAM = new Table("dbo.Ngram", "idx_ngram");
-        private readonly string tableName;
-        public string indexName { get; }
+        public static readonly Table EXACT = new Table("dbo.Exact");
+        public static readonly Table NGRAM = new Table("dbo.Ngram");
 
-        private Table(string tableName, string indexName)
+        private readonly string tableName;
+        private Table(string tableName)
         {
             this.tableName = tableName;
-            this.indexName = indexName;
         }
 
         public override string ToString()

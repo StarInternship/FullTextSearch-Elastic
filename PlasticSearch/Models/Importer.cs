@@ -23,7 +23,7 @@ namespace PlasticSearch.Models
             if (File.Exists(path))
             {
                 string text = File.ReadAllText(path);
-                SearchController.Instance.AddFile(path, text);
+                DatabaseController.Instance.AddToSendingFiles(path, text);
             }
         }
 
