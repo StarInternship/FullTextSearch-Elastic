@@ -21,14 +21,23 @@ namespace PlasticSearch
         {
             preprocessTask = new Task(() =>
             {
-                sw.Start();
+
                 Importer.CreateLog();
+                sw.Start();
+                Importer.WriteLog("starting...");
+                Connect();
+
+                Importer.WriteLog("connect " + sw.ElapsedMilliseconds + " ms");
+
 
                 Importer importer = new Importer();
-
                 importer.ReadFiles();
 
+                Importer.WriteLog("read files in " + sw.ElapsedMilliseconds + " ms");
+
                 InsertFiles();
+
+                Importer.WriteLog("insert in " + sw.ElapsedMilliseconds + " ms");
 
                 sw.Stop();
                 preprocessTime = sw.ElapsedMilliseconds;
@@ -56,7 +65,7 @@ namespace PlasticSearch
             .Refresh(Elasticsearch.Net.Refresh.True)
             );
             bulkIndexResponse.Wait();
-
+            files.Clear();
         }
 
         public SearchResult Search(string query, string type)
