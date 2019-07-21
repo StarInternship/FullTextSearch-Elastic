@@ -1,6 +1,7 @@
 ﻿using Nest;
-using PlasticSearch.Models;
+using System;
 using System.Collections.Generic;
+using PlasticSearch.Models;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace PlasticSearch
         private readonly Stopwatch sw = new Stopwatch();
         private long preprocessTime = -1;
         private Task preprocessTask;
-        private LinkedList<Text> files = new LinkedList<Text>();
+        private List<Text> files = new List<Text>();
         private ElasticClient client;
 
         public void Preprocess()
@@ -37,16 +38,24 @@ namespace PlasticSearch
 
         public void Connect()
         {
-
+            ConnectionSettings settings = new ConnectionSettings(new Uri("http://localhost:9200")).DefaultIndex("texts");
+            client = new ElasticClient(settings);
+            client.DeleteByQueryAsync<Text>(del => del.Query(q => q.MatchAll())).Wait();
         }
 
         public void AddFile(string fileName, string text)
         {
-
+            files.Add(new Text { fileName = fileName, text = text });
         }
 
         public void InsertFiles()
         {
+            var bulkIndexResponse = client.BulkAsync(b => b
+            .Index("texts")
+            .IndexMany(files)
+            .Refresh(Elasticsearch.Net.Refresh.True)
+            );
+            bulkIndexResponse.Wait();
 
         }
 
