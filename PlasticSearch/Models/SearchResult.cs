@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace PlasticSearch.Models
 {
     public class SearchResult
     {
-        public ISet<string> result { get; }
-        public long time { get; }
+        public IEnumerable<string> Result { get; }
+        public long Time { get; }
 
-        public SearchResult(ISet<string> result, long time)
+        public SearchResult(IEnumerable<string> result, long time)
         {
-            this.result = result;
-            this.time = time;
+            Result = result;
+            Time = time;
         }
     }
 }

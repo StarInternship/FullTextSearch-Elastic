@@ -2,6 +2,7 @@
 using PlasticSearch.Models;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PlasticSearch
@@ -9,7 +10,6 @@ namespace PlasticSearch
     internal class DatabaseController
     {
         public static DatabaseController Instance { get; } = new DatabaseController();
-        private ISet<string> result;
         private readonly Stopwatch sw = new Stopwatch();
         private long preprocessTime = -1;
         private Task preprocessTask;
@@ -52,7 +52,10 @@ namespace PlasticSearch
 
         public SearchResult Search(string query, string type)
         {
-            return new SearchResult(result, 0);
+            var searchResponse = client.Search<Text>(s => s.Query(q => q.Match(m => m.Field(f => f.text).Query(query))));
+            var texts = searchResponse.Documents;
+
+            return new SearchResult(new HashSet<Text>(texts).Select(x => x.fileName), searchResponse.Took);
         }
 
         public long IsReady()

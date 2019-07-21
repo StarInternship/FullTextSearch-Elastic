@@ -85,7 +85,7 @@
                     type: searchType
                 }
             }).done((result) => {
-                var list = result.result;
+                var list = result.Result;
                 var found = false;
 
                 $.each(list, (index, value) => {
@@ -94,9 +94,9 @@
                 });
 
                 if (!found) {
-                    $('#state').html('search duration: ' + result.time + ' ms. no result found.');
+                    $('#state').html('search duration: ' + result.Time + ' ms. no result found.');
                 } else {
-                    $('#state').html('search duration: ' + result.time + ' ms. results:');
+                    $('#state').html('search duration: ' + result.Time + ' ms. results:');
                 }
             });
         }
