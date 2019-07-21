@@ -1,8 +1,5 @@
-﻿using PlasticSearch.Controllers;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace PlasticSearch.Models
@@ -23,7 +20,7 @@ namespace PlasticSearch.Models
             if (File.Exists(path))
             {
                 string text = File.ReadAllText(path);
-                DatabaseController.Instance.AddToSendingFiles(path, text);
+                DatabaseController.Instance.AddFile(path, text);
             }
         }
 

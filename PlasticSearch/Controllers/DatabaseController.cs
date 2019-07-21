@@ -1,16 +1,5 @@
-﻿
-using Elasticsearch.Net;
-using FastMember;
-using Nest;
-using PlasticSearch.Controllers;
-using System;
+﻿using Nest;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace PlasticSearch
 {
@@ -18,26 +7,26 @@ namespace PlasticSearch
     {
         public static DatabaseController Instance { get; } = new DatabaseController();
         private LinkedList<Text> files = new LinkedList<Text>();
-        ElasticClient client;
+        private ElasticClient client;
 
         public void Connect()
         {
 
         }
 
-        public void AddToSendingFiles(string fileName, string text)
+        public void AddFile(string fileName, string text)
         {
 
         }
 
-        public void sendFiles()
+        public void InsertFiles()
         {
 
         }
 
         public List<string> search(string text)
         {
-            return null;
+            return new List<string>();
         }
     }
 
@@ -54,32 +43,6 @@ namespace PlasticSearch
         public override bool Equals(object obj)
         {
             return obj.GetHashCode() == this.GetHashCode();
-        }
-
-    }
-
-    public class Table
-    {
-        public static readonly Table EXACT = new Table("dbo.Exact");
-        public static readonly Table NGRAM = new Table("dbo.Ngram");
-
-        private readonly string tableName;
-        private Table(string tableName)
-        {
-            this.tableName = tableName;
-        }
-
-        public override string ToString()
-        {
-            return tableName;
-        }
-
-        public static List<Table> Values()
-        {
-            return new List<Table>()
-            {
-                EXACT, NGRAM
-            };
         }
     }
 }

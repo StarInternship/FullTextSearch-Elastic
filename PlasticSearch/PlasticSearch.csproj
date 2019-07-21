@@ -152,6 +152,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\DatabaseController.cs" />
+    <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Exact.cs">
       <DependentUpon>PlasticSearchModel.tt</DependentUpon>
     </Compile>
@@ -159,13 +160,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Importer.cs" />
-    <Compile Include="Models\SearchResult.cs" />
-    <Compile Include="Models\search\InvertedIndex.cs" />
-    <Compile Include="Models\search\Search.cs" />
-    <Compile Include="Models\tokenizer\ExactSearchTokenizer.cs" />
-    <Compile Include="Models\tokenizer\FuzzySearchTokenizer.cs" />
-    <Compile Include="Models\tokenizer\NgramSearchTokenizer.cs" />
-    <Compile Include="Models\tokenizer\Tokenizer.cs" />
     <Compile Include="Ngram.cs">
       <DependentUpon>PlasticSearchModel.tt</DependentUpon>
     </Compile>

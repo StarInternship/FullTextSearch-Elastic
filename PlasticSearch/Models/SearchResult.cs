@@ -10,7 +10,7 @@ namespace PlasticSearch.Models
         public ISet<string> result { get; }
         public long time { get; }
 
-    public SearchResult(ISet<string> result, long time)
+        public SearchResult(ISet<string> result, long time)
         {
             this.result = result;
             this.time = time;
