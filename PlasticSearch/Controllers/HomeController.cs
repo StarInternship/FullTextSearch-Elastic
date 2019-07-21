@@ -12,13 +12,13 @@ namespace PlasticSearch.Controllers
         [HttpPost]
         public JsonResult Search(string query, string type)
         {
-            return Json(SearchController.Instance.Search(query, type));
+            return Json(DatabaseController.Instance.Search(query, type));
         }
 
         [HttpPost]
         public long IsReady()
         {
-            return SearchController.Instance.GetIsReady();
+            return DatabaseController.Instance.IsReady();
         }
     }
 }
